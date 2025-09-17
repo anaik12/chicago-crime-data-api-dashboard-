@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/chicago-crime-data-api-dashboard-/static/css/main.d4613b69.css",
+    "main.js": "/chicago-crime-data-api-dashboard-/static/js/main.75ba582f.js",
+    "static/js/453.0c2440bc.chunk.js": "/chicago-crime-data-api-dashboard-/static/js/453.0c2440bc.chunk.js",
+    "index.html": "/chicago-crime-data-api-dashboard-/index.html",
+    "main.d4613b69.css.map": "/chicago-crime-data-api-dashboard-/static/css/main.d4613b69.css.map",
+    "main.75ba582f.js.map": "/chicago-crime-data-api-dashboard-/static/js/main.75ba582f.js.map",
+    "453.0c2440bc.chunk.js.map": "/chicago-crime-data-api-dashboard-/static/js/453.0c2440bc.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.d4613b69.css",
+    "static/js/main.75ba582f.js"
+  ]
+}
