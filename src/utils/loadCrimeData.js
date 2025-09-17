@@ -43,7 +43,7 @@ const useCrimeData = (arg = {}) => {
       // Special case: If using SODA resource endpoint, fetch per-year samples to avoid a single year dominating the $limit
       try {
         const u = new URL(finalUrl);
-        const match = u.pathname.match(/\/resource\/([a-z0-9\-]+)\.json$/i);
+        const match = u.pathname.match(/\/resource\/([a-z0-9-]+)\.json$/i);
         const isSoda = /(^|\.)data\.cityofchicago\.org$/i.test(u.hostname) && !!match;
         if (isSoda && startYear && endYear) {
           const rid = match[1];
