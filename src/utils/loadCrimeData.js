@@ -15,6 +15,7 @@ const useCrimeData = (arg = {}) => {
     endYear = 2025,
     appToken, // Optional Socrata app token
     perYearLimit, // Sample size per year when querying SODA; unset = no $limit
+    whereExtra,
   } = opts;
 
   const [crimeData, setCrimeData] = useState([]);
@@ -52,7 +53,12 @@ const useCrimeData = (arg = {}) => {
           // 1) Top 10 categories for the whole range
           const topUrl = new URL(base);
           topUrl.searchParams.set("$select", "primary_type, count(1) as c");
-          topUrl.searchParams.set("$where", `year between ${startYear} and ${endYear}`);
+          topUrl.searchParams.set(
+            "$where",
+            [`year between ${startYear} and ${endYear}`, whereExtra?.trim() ? `(${whereExtra})` : null]
+              .filter(Boolean)
+              .join(" AND ")
+          );
           topUrl.searchParams.set("$group", "primary_type");
           topUrl.searchParams.set("$order", "c desc");
           topUrl.searchParams.set("$limit", "10");
@@ -71,7 +77,16 @@ const useCrimeData = (arg = {}) => {
           // 2) Aggregated series for charts
           const seriesUrl = new URL(base);
           seriesUrl.searchParams.set("$select", "year, primary_type, count(1) as c");
-          seriesUrl.searchParams.set("$where", `year between ${startYear} and ${endYear}` + (topCategories.length ? ` AND primary_type in(${topCategories.map((t) => `'${t.replace(/'/g, "''")}'`).join(",")})` : ""));
+          seriesUrl.searchParams.set(
+            "$where",
+            [
+              `year between ${startYear} and ${endYear}`,
+              topCategories.length ? `primary_type in(${topCategories.map((t) => `'${t.replace(/'/g, "''")}'`).join(",")})` : null,
+              whereExtra?.trim() ? `(${whereExtra})` : null,
+            ]
+              .filter(Boolean)
+              .join(" AND ")
+          );
           seriesUrl.searchParams.set("$group", "year, primary_type");
           seriesUrl.searchParams.set("$order", "year, primary_type");
           if (appToken) seriesUrl.searchParams.set("$$app_token", appToken);
@@ -83,7 +98,12 @@ const useCrimeData = (arg = {}) => {
           // 3) Top locations for donut
           const locUrl = new URL(base);
           locUrl.searchParams.set("$select", "location_description, count(1) as c");
-          locUrl.searchParams.set("$where", `year between ${startYear} and ${endYear}`);
+          locUrl.searchParams.set(
+            "$where",
+            [`year between ${startYear} and ${endYear}`, whereExtra?.trim() ? `(${whereExtra})` : null]
+              .filter(Boolean)
+              .join(" AND ")
+          );
           locUrl.searchParams.set("$group", "location_description");
           locUrl.searchParams.set("$order", "c desc");
           locUrl.searchParams.set("$limit", "10");
@@ -110,6 +130,7 @@ const useCrimeData = (arg = {}) => {
               "latitude is not null",
               "longitude is not null",
               topCategories.length ? `primary_type in(${topCategories.map((t) => `'${t.replace(/'/g, "''")}'`).join(",")})` : null,
+              whereExtra?.trim() ? `(${whereExtra})` : null,
             ].filter(Boolean);
             p.searchParams.set("$where", whereParts.join(" AND "));
             if (Number.isFinite(perYearLimit)) {
