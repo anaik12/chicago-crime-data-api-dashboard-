@@ -14,8 +14,7 @@ function App() {
   const defaultEnd = new Date().getFullYear();
   const defaultStart = defaultEnd - 14;
   const [years, setYears] = useState({ start: defaultStart, end: defaultEnd });
-  const [whereExtra, setWhereExtra] = useState("
-  ");
+  const [whereExtra, setWhereExtra] = useState("");
 
   // Use SODA resource endpoint with optional Socrata app token to avoid 403s
   const { crimeData, loading, error, series, topLocations } = useCrimeData({
